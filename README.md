@@ -52,11 +52,11 @@
 
 8. Enjoy it!
 
-由于按照要求，只爬取了从第 3 页开始的 5 页数据，可以自行修改 `second_hand_house_spider.py` 和 `new_house_spider.py` 中的 `start_page` 和 `end_page` 以爬取更多数据。
+由于按照要求，只爬取了从第 3 页开始的 5 页数据，可以自行修改 [`second_hand_house_spider.py`](lianjia/lianjia/spiders/second_hand_house_spider.py) 和 [`new_house_spider.py`])(lianjia/lianjia/spiders/new_house_spider.py) 中的 `start_page` 和 `end_page` 以爬取更多数据。
 
 ## 反爬虫机制
 
-链家的反爬虫机制比较简单，在 `settings.py` 文件设置 `User-Agent` 以及在 `second_hand_house_spider.py` 脚本中设置 `cookie` 即可。
+链家的反爬虫机制比较简单，在 [`settings.py`](lianjia/lianjia/settings.py) 文件设置 `User-Agent` 以及在 [`second_hand_house_spider.py`](lianjia/lianjia/spiders/second_hand_house_spider.py) 脚本中设置 `cookie` 即可。
 
 设置 `cookie` 还有一个原因是：如果不设置 `cookie`，二手房靠后的页面无法访问，会被重定向至登陆页面。
 
