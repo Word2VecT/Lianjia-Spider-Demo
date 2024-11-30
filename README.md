@@ -52,7 +52,7 @@
 
 8. Enjoy it!
 
-由于按照要求，只爬取了从第 3 页开始的 5 页数据，可以自行修改 [`second_hand_house_spider.py`](lianjia/lianjia/spiders/second_hand_house_spider.py) 和 [`new_house_spider.py`])(lianjia/lianjia/spiders/new_house_spider.py) 中的 `start_page` 和 `end_page` 以爬取更多数据。
+由于按照要求，只爬取了从第 3 页开始的 5 页数据，可以自行修改 [`second_hand_house_spider.py`](lianjia/lianjia/spiders/second_hand_house_spider.py) 和 [`new_house_spider.py`](lianjia/lianjia/spiders/new_house_spider.py) 中的 `start_page` 和 `end_page` 以爬取更多数据。
 
 ## 反爬虫机制
 
