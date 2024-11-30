@@ -67,3 +67,5 @@
 ### 如何获取 `lianjia_token`（Verify on Chrome / Chromium）
 
 开发者工具 $\to$ Applications $\to$ Cookies $\to$ `https://bj.lianjia.com` $\to$ `lianjia_token`
+
+![示意图](doc/figure.png)
