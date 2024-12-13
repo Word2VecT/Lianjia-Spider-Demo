@@ -3,10 +3,73 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-from scrapy import signals
+# useful for handling different item types with a single interface
 
 # useful for handling different item types with a single interface
-from itemadapter import is_item, ItemAdapter
+import random
+
+from scrapy import signals
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
+from scrapy.exceptions import IgnoreRequest
+from scrapy.utils.response import response_status_message
+
+
+class RedirectRetryMiddleware(RetryMiddleware):
+    def process_response(self, request, response, spider):
+        # 检查是否是重定向
+        if response.status in [301, 302]:
+            spider.logger.warning(f"Redirect detected for {request.url} to {response.headers.get('Location')}")
+
+            # 获取当前重试次数
+            retry_count = request.meta.get("retry_count", 0)
+
+            # 如果重试次数超过最大重试限制，直接返回
+            if retry_count >= self.max_retry_times:
+                spider.logger.error(f"Max retries reached for {request.url}. Giving up.")
+                return response
+
+            # 增加重试计数并重新发起请求
+            retry_count += 1
+            new_request = request.copy()
+            new_request.meta["retry_count"] = retry_count
+            spider.logger.info(f"Retrying {request.url} ({retry_count}/{self.max_retry_times})...")
+            return self._retry(new_request, response_status_message(response.status), spider) or response
+
+        # 如果不是重定向，直接返回原始响应
+        return response
+
+
+class TotalCountRetryMiddleware:
+    def __init__(self, retry_times):
+        self.retry_times = retry_times
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        # 获取配置的最大重试次数
+        retry_times = crawler.settings.getint("RETRY_TIMES", 10)
+        return cls(retry_times)
+
+    def process_response(self, request, response, spider):
+        if "captcha" in response.url:
+            spider.logger.warning(f"Detected captcha on {request.url}, skipping retries")
+            raise IgnoreRequest(f"Captcha detected for {request.url}")
+
+        # 检查页面是否包含 total_count_str
+        total_count_str = response.xpath('//span[@class="content__title--hl"]/text()').get()
+        if total_count_str:
+            return response  # 如果存在 total_count_str，则正常返回响应
+
+        # 如果 total_count_str 不存在，判断是否需要重试
+        retry_times = request.meta.get("retry_times", 0)
+        if retry_times < self.retry_times:
+            spider.logger.info(f"Retrying {request.url} due to missing total_count (attempt {retry_times + 1})")
+            retry_req = request.copy()
+            retry_req.meta["retry_times"] = retry_times + 1
+            retry_req.dont_filter = True  # 防止 URL 被过滤
+            return retry_req  # 返回一个新的请求以进行重试
+        else:
+            spider.logger.warning(f"Giving up on {request.url} after {retry_times} retries due to missing total_count")
+            raise IgnoreRequest(f"Missing total_count_str after {retry_times} retries")
 
 
 class LianjiaSpiderMiddleware:
@@ -33,8 +96,7 @@ class LianjiaSpiderMiddleware:
         # it has processed the response.
 
         # Must return an iterable of Request, or item objects.
-        for i in result:
-            yield i
+        yield from result
 
     def process_spider_exception(self, response, exception, spider):
         # Called when a spider or process_spider_input() method
@@ -49,11 +111,10 @@ class LianjiaSpiderMiddleware:
         # that it doesn’t have a response associated.
 
         # Must return only requests (not items).
-        for r in start_requests:
-            yield r
+        yield from start_requests
 
     def spider_opened(self, spider):
-        spider.logger.info("Spider opened: %s" % spider.name)
+        spider.logger.info(f"Spider opened: {spider.name}")
 
 
 class LianjiaDownloaderMiddleware:
@@ -100,4 +161,21 @@ class LianjiaDownloaderMiddleware:
         pass
 
     def spider_opened(self, spider):
-        spider.logger.info("Spider opened: %s" % spider.name)
+        spider.logger.info(f"Spider opened: {spider.name}")
+
+
+class ProxyMiddleware:
+    def __init__(self):
+        self.proxies = [
+            "http://t13401380689666:dpi6k4ix@b292.kdltpspro.com:15818",  # 替换为实际的代理信息
+        ]
+
+    def process_request(self, request, spider):
+        proxy = random.choice(self.proxies)  # 随机选择一个代理
+        request.meta["proxy"] = proxy
+        spider.logger.info(f"Using Proxy: {proxy}")
+
+
+class CloseConnectionMiddleware:
+    def process_request(self, request, spider):
+        request.headers["Connection"] = "close"  # 添加请求头
