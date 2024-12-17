@@ -98,6 +98,8 @@
     \label{fig:price_radar_chart}
 \end{figure}
 
+可以看到，从总价上，租金从高到低排序为北京、深圳、上海、广州，且北上深明显大于广州，广州明显大于常德。
+
 \subsubsection{单位面积租金对比}
 见图~\ref{fig:unit_price_bar_chart}、图~\ref{fig:unit_price_radar_chart}。
 \begin{figure}[htbp]
@@ -112,6 +114,8 @@
     \caption{五个城市单位面积租金统计信息雷达图对比}
     \label{fig:unit_price_radar_chart}
 \end{figure}
+
+从单价上来看，北京、上海、深圳比较接近、且明显大于广州，常德仍然是明显较小者。值得注意的是，常德也存在单价很高的租房，而北京的最低单位面积租金为五个城市最低。
 
 \subsection{居室分析}
 首先通过直方图展示不同城市的一居、二居、三居租金信息，进行城市间的比较。如图~\ref{fig:room_1_price_bar_chart}、图~\ref{fig:room_2_price_bar_chart}、图~\ref{fig:room_3_price_bar_chart}。
@@ -165,6 +169,8 @@
     \caption{常德房屋类型租金信息对比}
     \label{fig:changde_room_price_line_chart}
 \end{figure}
+
+可以看到，各个城市从一居、二居到三居，随着居室的增加，租金呈现增加的趋势，原因很容易理解，房屋面积增加，租金自然增加。
 
 \subsection{板块分析}
 通过直方图之间展示板块租金信息，画图前对板块的租金进行排序，便于比较。如图~\ref{fig:bj_area_price_bar_chart}、图~\ref{fig:sh_area_price_bar_chart}、图~\ref{fig:gz_area_price_bar_chart}、图~\ref{fig:sz_area_price_bar_chart}、图~\ref{fig:changde_area_price_bar_chart}。
@@ -231,6 +237,10 @@
     \caption{常德各区域平均租金分布}
     \label{fig:changde_region_heat_map}
 \end{figure}
+
+可以看到，在五个城市中，都存在规律越靠近城市正中心，靠近资源丰富、经济发达、交通便利的地段，租金就越高。这是由地理位置、配套设施、经济发展水平、房屋质量、供需关系和区域规划等多种因素综合决定的。例如北京的西城区，拥有优质的教育资源（众多重点学校）、便利的地理位置和浓厚的历史文化底蕴；上海的黄浦区，是上海的中心城区，拥有繁华的商业区、顶级配套设施和深厚的历史文化底蕴，集经济、文化、交通优势于一体；广州的天河区，是广州的核心商务区，集高端商业中心、优质教育资源和便捷交通枢纽于一体，吸引大量高收入人群和企业进驻；深圳的南山区是深圳的科技创新中心，汇聚了大量高新技术企业、高收入人才和优质教育资源，带动区域房价居高不下。
+
+此外，板块分析时，较高的板块还有可能是集中的别墅区，富人区，如北京的中央别墅区、常德的白马湖、广州的二沙岛等。
 
 \subsection{朝向分析}
 为了观察价格分布，画出各城市各朝向的价格概率分布曲线，由于画分布图时，会受到极端大值的影响，使得图像不直观，于是筛除了大于平均值加上2倍标准差的数据，使得图像更加清晰明了。如图~\ref{fig:bj_direction_unit_price_distribution}、图~\ref{fig:sh_direction_unit_price_distribution}、图~\ref{fig:gz_direction_unit_price_distribution}、图~\ref{fig:sz_direction_unit_price_distribution}、图~\ref{fig:changde_direction_unit_price_distribution}。
